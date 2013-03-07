@@ -9,17 +9,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/bustardcelly/grunt-forever.git"
+    "url": "https://github.com/infrared5/techtalk-amd-2013.git"
   },
-  "bugs": {
-    "url": "git://github.com/bustardcelly/grunt-forever/issues"
-  },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/bustardcelly/grunt-forever/blob/master/LICENSE-MIT"
-    }
-  ],
   "main": "Gruntfile.js",
   "engines": {
     "node": ">= 0.8.0"
