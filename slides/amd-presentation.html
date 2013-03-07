@@ -1,0 +1,369 @@
+<!--
+Google IO 2012 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahe <lukem@google.com>
+
+URL: https://code.google.com/p/io-2012-slides
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google IO 2012</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <!--This one seems to work all the time, but really small on ipad-->
+  <!--<meta name="viewport" content="initial-scale=0.4">-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" media="all" href="theme/css/default.css">
+  <link rel="stylesheet" media="all" href="theme/css/app.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css">
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  <script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+<!-- <slide class="logoslide nobackground">
+  <article class="flexbox vcenter">
+    <span><img src="images/google_developers_logo.png"></span>
+  </article>
+</slide>
+ -->
+<slide class="title-slide nobackground">
+  <!--<aside class="gdbar"><img src="images/google_developers_icon_128.png"></aside>-->
+  <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+  <hgroup class="auto-fadein">
+    <h1 data-config-title><!-- populated from slide_config.json --></h1>
+    <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+    <p data-config-presenter><!-- populated from slide_config.json --></p>
+  </hgroup>
+</slide>
+
+
+<slide class="specification" >
+  
+    <hgroup>
+      <h2>AMD</h2>
+      <h3><strong>A</strong>synchronous <strong>M</strong>odule <strong>D</strong>efinition</h3>
+    </hgroup>
+    <article ><ul>
+<li>Specification for defining modules in JavaScript that can support loading of dependencies asynchronously</li>
+<li>Targeting browser environment where synchronous loading of a dependency can be 'blocking'</li>
+<li>Alternative to libraries that allow to define dependencies and load by script-injection order (<a href="http://labjs.com/">LabJS</a>, <a href="http://headjs.com/">HeadJS</a>)</li>
+</ul>
+<footer class="source">
+<a href="https://github.com/amdjs/amdjs-api/wiki/AMD">https://github.com/amdjs/amdjs-api/wiki/AMD</a>
+</footer></article>
+ 
+</slide>
+
+<slide class="specification" >
+  
+    <hgroup>
+      <h2>CommonJS</h2>
+      <h3></h3>
+    </hgroup>
+    <article ><ul>
+<li>CommonJS is a volunteer working group attempting to standardize APIs for JavaScript</li>
+<li>Specifications and proposals for many common conventions and implementations in JavaScipt</li>
+<li>Originally called ServerJS with the goal of specifying APIs targeting non-browser environments</li>
+<li><a href="http://nodejs.org/">nodejs</a> implements some of these specifications</li>
+</ul>
+<footer class="source">
+<a href=""http://wiki.commonjs.org">http://wiki.commonjs.org</a>
+</footer></article>
+ 
+</slide>
+
+<slide class="nobackground" >
+  
+    <hgroup>
+      <h2>CommonJS Modules/1.0</h2>
+      <h3></h3>
+    </hgroup>
+    <article ><ul>
+<li>Synchronous loading of JavaScript modules</li>
+</ul>
+<p><em>loader</em>
+<pre>
+require(dependency)?.property
+</pre></p>
+<p><em>loadee</em>
+<pre>
+exports = ?&lt;function|object&gt;
+</pre></p></article>
+ 
+</slide>
+
+<slide class="nobackground" >
+  
+    <hgroup>
+      <h2>CommonJS Modules/1.0</h2>
+      <h3></h3>
+    </hgroup>
+    <article ><ul>
+<li>Synchronous loading of JavaScript modules</li>
+</ul>
+<p><em>math.js</em>
+<pre>exports.add = function() {<br/>  var values = Array.prototype.slice.call(arguments, 0),<br/>      result = 0;<br/>  while(values.length &gt; 0) {<br/>      result += Number(values.shift());<br/>  }<br/>  return result;<br/>};</pre></p></article>
+ 
+</slide>
+
+<slide class="nobackground" >
+  
+    <hgroup>
+      <h2>CommonJS Modules/1.0</h2>
+      <h3></h3>
+    </hgroup>
+    <article ><ul>
+<li>Synchronous loading of JavaScript modules</li>
+</ul>
+<p><em>incrementer.js</em>
+<pre>var add = require('math').add,<br/>exports.increment = function(value){<br/> return add(value, 1);<br/>};</pre></p>
+<p><em>app.js</em>
+<pre>var inc = require('incrementer').increment;<br/>inc(1);<br/>// 2</pre></p></article>
+ 
+</slide>
+
+<slide  >
+  
+    <hgroup>
+      <h2>AMD</h2>
+      <h3>neé CommonJS Modules/AsynchronousDefinition</h3>
+    </hgroup>
+    <article ><ul>
+<li>Async nature of scripts for browser did not translate well for Modules/1.0 where file I/O is cheap</li>
+<li>multiple require()'s lines adds complexity to dependency resolutions</li>
+<li>coupled with synchonous loading, contributes to 'blocking' and affects performance</li>
+</ul>
+<p><em>signature:</em>
+<pre>define(id?, dependencies?, factory);</pre></p>
+<p><em>factory is a function that defines or returns the module export</em></p></article>
+ 
+</slide>
+
+<slide  >
+  
+    <hgroup>
+      <h2>AMD</h2>
+      <h3>neé CommonJS Modules/AsynchronousDefinition</h3>
+    </hgroup>
+    <article ><p><em>math.js</em>
+<pre>define('math', function(){<br/>    return {<br/>        add: function() {<br/>            var values = Array.prototype.slice.call(arguments, 0),<br/>                result = 0;<br/>            while(values.length &gt; 0) {<br/>                result += Number(values.shift());<br/>            }<br/>            return result;<br/>        }<br/>    };
+});
+</pre></p></article>
+ 
+</slide>
+
+<slide  >
+  
+    <hgroup>
+      <h2>AMD</h2>
+      <h3>neé CommonJS Modules/AsynchronousDefinition</h3>
+    </hgroup>
+    <article ><p><em>incrementer.js</em>
+<pre>define('incrementer', ['math'], function(math) {<br/>    return function(value) {<br/>        math.add(value, 1);<br/>    };<br/>});</pre></p>
+<p><em>app.js</em>
+<pre>require(['incrementer'], function(incrementer){<br/>    incrementer(1);<br/>    // 2<br/>});</pre></p></article>
+ 
+</slide>
+
+<slide class="nobackground" >
+  
+    <hgroup>
+      <h2>Why AMD?</h2>
+      <h3></h3>
+    </hgroup>
+    <article ><ul>
+<li>No module syntax in JS (ie. import, include, etc.)</li>
+<li>Get rid of dependency management through &lt;script&gt; tag order</li>
+<li>Stop littering window with namespaced objects</li>
+<li>Proper representation of objects with added benefit of module closure</li>
+<li>Lazy evaluation and cacheing of references</li>
+</ul></article>
+ 
+</slide>
+
+<slide class="nobackground" >
+  
+    <hgroup>
+      <h2>AMD Libraries</h2>
+      <h3></h3>
+    </hgroup>
+    <article ><ul>
+<li><a href="https://github.com/cujojs/curl">curl</a></li>
+<li><a href="http://bdframework.org/bdLoad/demos.html">backdraft</a></li>
+<li><a href="https://github.com/jbrantly/yabble">Yabble</a></li>
+<li><a href="http://requirejs.org/">RequireJS</a></li>
+<li>more…</li>
+</ul>
+<p>How they differ:</p>
+<p>Mostly their interpretation of the original CommonJS spec - whether they 'return' on module or export, and then any artistic license with how they can make it 'better' and introduce their own keywords</p></article>
+ 
+</slide>
+
+<slide  >
+  
+    <hgroup>
+      <h2>RequireJS</h2>
+      <h3>History</h3>
+    </hgroup>
+    <article ><ul>
+<li>Created by <a href="https://twitter.com/jrburke">James Burke</a></li>
+<li>Worked on <a href="http://dojotoolkit.org/">Dojo</a>'s module loader</li>
+<li>Looking for better dependency management and asynchonous loading for Dojo, began RunJS</li>
+<li>Started to define the <a href="http://wiki.commonjs.org/wiki/Modules/Transport/C">CommonJS Module/Transport/C</a> spec for browser modules</li>
+<li>Grew into an <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD</a> specification which, due to politics, broke from CommonJS</li>
+<li>The <a href="http://requirejs.org/">RequireJS</a> library matured around all of these events</li>
+</ul></article>
+ 
+</slide>
+
+<slide class="nobackground" >
+  
+    <hgroup>
+      <h2>RequireJS</h2>
+      <h3>Example</h3>
+    </hgroup>
+    <article ><p><a href="http://localhost:3000/01_requirejs_example.html">http://localhost:3000/01_requirejs_example.html</a></p></article>
+ 
+</slide>
+
+<slide class="nobackground" >
+  
+    <hgroup>
+      <h2>RequireJS</h2>
+      <h3>Plugins</h3>
+    </hgroup>
+    <article ><p>Loader plugins which allow you to define how to load and treat dependencies.</p>
+<ul>
+<li><a href="https://github.com/requirejs/text">text</a>, for loading a file as text (templates, lazy eval)</li>
+<li><a href="https://github.com/requirejs/i18n">i18n</a>, localization, you know, for, like, words and junk</li>
+</ul>
+<p>The plugin API and architecture is simple enough that a monkey could make one (shameless plug):</p>
+<p><a href="https://github.com/bustardcelly/require-expose-plugin">expose!</a> to expose dependencies of loaded module for mocking in tests.</p></article>
+ 
+</slide>
+
+<slide class="nobackground" >
+  
+    <hgroup>
+      <h2>RequireJS</h2>
+      <h3>Build</h3>
+    </hgroup>
+    <article ><ul>
+<li>uses <a href="http://requirejs.org/docs/download.html#rjs">r.js</a> tool, can run under NodeJS or within Rhino</li>
+<li>cut down on HTTP requests</li>
+<li>bigger upfront hit, because loading all modules, but smoother experience</li>
+<li>big file load, but lazy instantiation</li>
+<li>still alows for modularity of less-used scripts by end-users</li>
+</ul>
+<p><a href="http://localhost:3000/dist/01_requirejs_example.html">http://localhost:3000/dist/01_requirejs_example.html</a></p></article>
+ 
+</slide>
+
+<slide class="nobackground" >
+  
+    <hgroup>
+      <h2>Cons</h2>
+      <h3>AMD/RequireJS</h3>
+    </hgroup>
+    <article ><p>AMD:</p>
+<ul>
+<li>Unneccessary function wrapping in build adds to character count and file size</li>
+<li>Requires the library to interpet the module declarations</li>
+<li>Haters gonna hate async. callbacks are yucky.</li>
+<li>library + build systems such as <a href="https://github.com/substack/node-browserify">browserify</a> as alternative</li>
+</ul>
+<p>RequireJS:</p>
+<ul>
+<li>Because of above</li>
+<li>Since it matured alongside the AMD spec, the history and implementations may be more than what is needed in production (but is why <a href="https://github.com/jrburke/almond">almond</a> exists)</li>
+</ul></article>
+ 
+</slide>
+
+<slide class="nobackground" >
+  
+    <hgroup>
+      <h2>ES-Harmony modules</h2>
+      <h3></h3>
+    </hgroup>
+    <article ><ul>
+<li>currently a proposal for <a href="http://wiki.ecmascript.org/doku.php?id=harmony:modules">modules</a> in harmony (TC39 approved proposed additions to the specification for ECMAScript)</li>
+<li>not necessarily means it will drop in ES-6, it just gets to wear a medal in purgatory</li>
+</ul>
+<p>math.js
+<pre>module "math" {<br/> export function add() {<br/>  var values = Array.prototype.slice.call(arguments, 0),<br/>      result = 0;<br/>  while(values.length &gt; 0) {<br/>      result += Number(values.shift());<br/>  }<br/>  return result;<br/> };<br/>};</pre></p></article>
+ 
+</slide>
+
+<slide class="nobackground" >
+  
+    <hgroup>
+      <h2>ES-Harmony modules</h2>
+      <h3></h3>
+    </hgroup>
+    <article ><p>incrementer.js
+<pre>module "incrementer" {<br/> import {add} from 'math';<br/><br/> export function increment(value) {<br/>  return add(value,1);<br/>};</pre></p></article>
+ 
+</slide>
+
+<slide class="nobackground" >
+  
+    <hgroup>
+      <h2>Harmony Module Support</h2>
+      <h3>today</h3>
+    </hgroup>
+    <article ><ul>
+<li><a href="https://github.com/jrburke/require-hm">require-hm</a>: RequireJS plugin for API described on harmony wiki</li>
+<li><a href="http://xcambar.github.com/shepherd-js/">shephard</a>: Sugar-based syntax to support ES-Harmony module API</li>
+<li><a href="https://github.com/addyosmani/es6-module-loader/">es6-module-loader</a>: Library provided API similar to ES-Harmony module proposal. Abandoned for support of require-hm</li>
+</ul>
+<p>Without putting words in his mouth, James Burke has stated that the goal of AMD is to provide support until a proper ES.next proposal is adopted and supported in the specification. Once available, AMD should fade away with support to transpile current AMDs to be compliant with ES.next module.</p></article>
+ 
+</slide>
+
+
+<slide class="thank-you-slide segue nobackground">
+  <!--<aside class="gdbar right"><img src="images/google_developers_icon_128.png"></aside>-->
+  <article class="flexbox vleft auto-fadein">
+    <h2>Beer!</h2>
+  </article>
+  <p class="auto-fadein" data-config-contact>
+    <!-- populated from slide_config.json -->
+  </p>
+</slide>
+
+<!-- <slide class="logoslide dark nobackground">
+  <article class="flexbox vcenter">
+    <span><img src="images/google_developers_logo_white.png"></span>
+  </article>
+</slide> -->
+
+<slide class="backdrop"></slide>
+
+</slides>
+
+<script>
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-XXXXXXXX-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
+<!--[if IE]>
+  <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+  <script>CFInstall.check({mode: 'overlay'});</script>
+<![endif]-->
+</body>
+</html>
