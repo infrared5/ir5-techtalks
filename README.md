@@ -1,8 +1,7 @@
-Presentations
----
+#Presentations
 > The following is a direct listing to presentations on various projects presented internally at Infrared5
 
-##2013
+2013
 ---
 [Internet Better](http://sqow.github.io/internet-better) : Overview of some stategies and software for delivering responsively and responsibly for the web now and in the future.
 
